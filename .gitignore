@@ -21,3 +21,4 @@ Carthage/Build
 Carthage/Checkouts
 
 GoogleMobileAds.framework/
+GoogleService-Info.plist
