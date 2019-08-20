@@ -19,7 +19,7 @@ class FinishRegistrationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("email: \(email), password: \(password)")
+        print("email: \(String(describing: email)), password: \(String(describing: password))")
     }
     
     // MARK: IBActions
@@ -32,6 +32,7 @@ class FinishRegistrationViewController: UIViewController {
         if nameTextField.text != "" && surnameTextField.text != "" {
             // finish registration
             FUser.registerUserWith(email: email, password: password, name: nameTextField.text!, surname: surnameTextField.text!)
+            goToApp()
         } else {
             print("all fields are required")
         }
@@ -39,5 +40,12 @@ class FinishRegistrationViewController: UIViewController {
     
     @IBAction func backgroundTap(_ sender: Any) {
         view.endEditing(false)
+    }
+    
+    // MARK: Helpers
+    func goToApp() {
+        let appView = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainApp") as! UITabBarController
+        
+        self.present(appView, animated: true, completion: nil)
     }
 }

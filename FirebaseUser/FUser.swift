@@ -25,6 +25,30 @@ class FUser {
         userId = _userId
     }
     
+    init(userDictionary: NSDictionary) {
+        if let name = userDictionary["name"] {
+            self.name = name as! String
+        } else {
+            self.name = "unknown"
+        }
+        if let surname = userDictionary["surname"] {
+            self.surname = surname as! String
+        } else {
+            self.surname = "unknown"
+        }
+        if let email = userDictionary["email"] {
+            self.email = email as! String
+        } else {
+            self.email = "unknown"
+        }
+        if let userId = userDictionary["userId"] {
+            self.userId = userId as! String
+        } else {
+            self.userId = "unknown"
+        }
+        self.fullName = self.name + " " + self.surname
+    }
+    
     class func registerUserWith(email: String, password: String, name: String, surname: String) {
         Auth.auth().createUser(withEmail: email, password: password) { (firebaseUser, error) in
             if error != nil {
@@ -45,12 +69,28 @@ class FUser {
                 print("error logging in \(error!.localizedDescription)")
             }
             
-            print("User logged in with \(String(describing: firUser?.user.email))")
+            self.fetchUserWithId(userId: firUser!.user.uid)
+        }
+    }
+    
+    class func fetchUserWithId(userId: String) {
+        Reference(.Users).document(userId).getDocument { (snapshot, error) in
+            if error != nil {
+                print("error fetching user \(error!.localizedDescription)")
+            }
+            
+            guard let snapshot = snapshot else { return }
+            
+            if snapshot.exists {
+                let userDictionary = snapshot.data()
+                let user = FUser(userDictionary: userDictionary as! NSDictionary)
+                
+            }
         }
     }
     
     func saveUserToFireStore() {
-        Firestore.firestore().collection("Users").document(userId).setData(dictionaryFromFUser() as! [String : Any],
+        Reference(.Users).document(userId).setData(dictionaryFromFUser() as! [String : Any],
            completion: { (error) in
             if error != nil {
                 print ("error saving to firestore \(error!.localizedDescription)")

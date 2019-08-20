@@ -119,6 +119,7 @@ class LoginViewController: UIViewController {
     
     func loginUser() {
         FUser.loginUserWith(email: emailTextField.text!, password: passwordTextField.text!)
+        goToApp()
     }
     
     // MARK: Alert
@@ -138,6 +139,13 @@ class LoginViewController: UIViewController {
             finishRegVC.email = emailTextField.text
             finishRegVC.password = passwordTextField.text
         }
+    }
+    
+    // MARK: Helpers
+    func goToApp() {
+        let appView = UIStoryboard.init(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainApp") as! UITabBarController
+        
+        self.present(appView, animated: true, completion: nil)
     }
     
 }
